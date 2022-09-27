@@ -4,8 +4,6 @@
 
 --NIGGAAAAA
 
-
-
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("niggerhubirl", "DarkTheme")
 
@@ -139,5 +137,76 @@ game:GetService("RunService").RenderStepped:Connect(function() ---- loops faster
             gui:Clone().Parent = v.Character.Head
     end
 end
+end)
+end)
+
+MainSection:NewButton("Aimbot","real", function()
+    local localPlayer = game:GetService("Players").LocalPlayer
+local mouse = localPlayer:GetMouse()
+local camera = game.Workspace.CurrentCamera
+local team = true
+
+local function closestplayer()
+    local target = nil
+    local dist = math.huge
+for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+    if v.Name ~= localPlayer.Name then
+        if v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") and team and v.TeamColor ~= localPlayer.TeamColor then
+            local magnitude = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+            local check = (Vector2.new(mouse.X,mouse.Y)-Vector2.new(magnitude.X,magnitude.Y)).magnitude
+
+            if check < dist then
+                target  = v
+                dist = check
+            end
+        elseif v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart") and v.Character:FindFirstChild("Head") and team == false then
+            local magnitude = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+            local check = (Vector2.new(mouse.X,mouse.Y)-Vector2.new(magnitude.X,magnitude.Y)).magnitude
+
+            if check < dist then
+                target  = v
+                dist = check
+            end
+        end
+    end
+end
+
+return target 
+end
+
+
+local camera = game.Workspace.CurrentCamera
+local UIS = game:GetService("UserInputService")
+local aim = false
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if aim then
+        camera.CFrame = CFrame.new(camera.CFrame.Position,closestplayer().Character.Head.Position)
+    end
+end)
+
+UIS.InputBegan:Connect(function(inp)
+    if inp.UserInputType == Enum.UserInputType.MouseButton2 then
+        aim = true
+    end
+end)
+
+UIS.InputEnded:Connect(function(inp)
+    if inp.UserInputType == Enum.UserInputType.MouseButton2 then
+        aim = false
+    end
+end)
+end)
+
+MainSection:NewButton("triggerbot","real", function()
+    local player = game:GetService("Players").LocalPlayer
+local mouse = player:GetMouse()
+game:GetService("RunService").RenderStepped:Connect(function()
+            if mouse.Target and mouse.Target.Parent ~= nil and mouse.Target.Parent:FindFirstChild("Humanoid") and mouse.Target.Parent.Name ~= player.Name then
+                local target = game:GetService("Players"):FindFirstChild(mouse.Target.Parent.Name)
+                if target.TeamColor ~= player.TeamColor then
+                mouse1press() wait() mouse1release()
+                end
+            end
 end)
 end)
